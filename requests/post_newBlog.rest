@@ -1,0 +1,9 @@
+POST http://localhost:3003/api/blogs
+Content-Type: application/json
+
+{  
+    "title" : "Blue Moon",
+    "author": "Tony Fireman",
+    "url" : "www.bluemoon.com",
+    "likes": 65
+}
