@@ -5,15 +5,18 @@ const mongoose = require('mongoose');
 
 const config = require('./utils/config');
 const middleware = require('./utils/middleware');
-const blogsRouter = require('./controllers/blogs');
+const blogsRouter = require('./controllers/blogs.control');
+const logger = require('./utils/logger');
+
+logger.info('connecting to ', config.MONGODB_URI);
 
 mongoose
   .connect(config.MONGODB_URI, { useNewUrlParser: true })
   .then(() => {
-    console.log('Conneted to MongoDB server.');
+    logger.info('Conneted to MongoDB server.');
   })
   .catch(error => {
-    console.log('Error connecting to MongoDB: ', error.message);
+    logger.error('Error connecting to MongoDB: ', error.message);
   });
 
 app.use(bodyParser.json());

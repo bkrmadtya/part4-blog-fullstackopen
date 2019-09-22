@@ -1,6 +1,11 @@
-const MONGODB_URI = `mongodb+srv://fullstack:fullstack@cluster0-2x9ya.mongodb.net/blog-app?retryWrites=true`;
+require('dotenv').config();
 
-const PORT = 3003;
+let PORT = process.env.PORT;
+let MONGODB_URI = process.env.MONGODB_URI;
+
+if (process.env.NODE_ENV === 'test') {
+  MONGODB_URI = process.env.TEST_MONGO_URI;
+}
 
 module.exports = {
   MONGODB_URI,
