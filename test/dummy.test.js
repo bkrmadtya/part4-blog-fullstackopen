@@ -32,7 +32,7 @@ describe('total likes', () => {
   });
 
   test('of a bigger list is calculated right', () => {
-    expect(listHelper.totalLikes(helper.initialBlogs)).toBe(251);
+    expect(listHelper.totalLikes(helper.initialBlogs)).toBe(175);
   });
 
   //   test.only('only this test will run', () => {
@@ -49,9 +49,9 @@ describe('favorite blog', () => {
   test('the blog with highest likes', () => {
     const result = listHelper.favoriteBlog(helper.initialBlogs);
     const expected = {
-      title: 'Golden Moon',
+      title: 'Gray Moon',
       author: 'Tony Fireman',
-      likes: 67
+      likes: 60
     };
     expect(result).toEqual(expected);
   });
@@ -76,7 +76,7 @@ describe('author with most likes', () => {
 
     const expected = {
       author: 'Tony Fireman',
-      likes: 196
+      likes: 120
     };
 
     expect(result).toEqual(expected);

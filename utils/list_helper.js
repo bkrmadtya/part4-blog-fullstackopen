@@ -24,7 +24,7 @@ const favoriteBlog = blogs => {
   };
 };
 
-// with Lodash
+// // with Lodash
 const mostBlogs = blogs => {
   const blogsCountByAuthor = _.map(_.countBy(blogs, 'author'), (val, key) => ({
     author: key,

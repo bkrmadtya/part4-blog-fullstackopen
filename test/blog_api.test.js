@@ -17,70 +17,104 @@ beforeEach(async () => {
   console.log('done');
 });
 
-test.skip('correct amount of blogs are returned as json', async () => {
-  const blogs = await api
-    .get('/api/blogs')
-    .expect(200)
-    .expect('Content-Type', /application\/json/);
+describe.skip('viewing a blog', () => {
+  test('correct amount of blogs are returned as json', async () => {
+    const blogs = await api
+      .get('/api/blogs')
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
 
-  expect(blogs.body.length).toBe(helper.initialBlogs.length);
+    expect(blogs.body.length).toBe(helper.initialBlogs.length);
+  });
+
+  test('missing title and url results in 400 Bad Request', async () => {
+    const newBlog = {
+      author: 'Ram Lal'
+    };
+
+    await api
+      .post('/api/blogs/')
+      .send(newBlog)
+      .expect(400);
+  });
+
+  test('the unique identifier property is named id', async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToView = blogsAtStart[0];
+
+    const resultBlog = await api
+      .get(`/api/blogs/${blogToView.id}`)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    expect(resultBlog.body.id).toBeDefined();
+  });
 });
 
-test.skip('the unique identifier property is named id', async () => {
-  const blogsAtStart = await helper.blogsInDb();
-  const blogToView = blogsAtStart[0];
+describe.skip('adding a blog', () => {
+  test('a valid blog can be added', async () => {
+    const newBlog = {
+      title: 'Muna Madan',
+      author: 'Laxmi Prasad Devkota',
+      url: 'www.munamadan.com',
+      likes: 100
+    };
 
-  const resultBlog = await api
-    .get(`/api/blogs/${blogToView.id}`)
-    .expect(200)
-    .expect('Content-Type', /application\/json/);
+    await api
+      .post('/api/blogs/')
+      .send(newBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
 
-  expect(resultBlog.body.id).toBeDefined();
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1);
+  });
+
+  test('like is zero by default if its missing from request', async () => {
+    const newBlog = {
+      title: 'No likes',
+      author: 'Not an author',
+      url: 'www.nolikes.com'
+    };
+
+    const savedBlog = await api
+      .post('/api/blogs/')
+      .send(newBlog)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
+
+    expect(savedBlog.body.likes).toBe(0);
+  });
 });
 
-test.skip('a valid blog can be added', async () => {
-  const newBlog = {
-    title: 'Muna Madan',
-    author: 'Laxmi Prasad Devkota',
-    url: 'www.munamadan.com',
-    likes: 100
-  };
+describe.skip('deleting a blog', () => {
+  test('with a valid id succeeds with 204 response status', async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToDelete = blogsAtStart[0];
 
-  await api
-    .post('/api/blogs/')
-    .send(newBlog)
-    .expect(200)
-    .expect('Content-Type', /application\/json/);
+    await api.delete(`/api/blogs/${blogToDelete.id}`).expect(204);
 
-  const blogsAtEnd = await helper.blogsInDb();
-  expect(blogsAtEnd.length).toBe(helper.initialBlogs.length + 1);
+    const blogsAtEnd = await helper.blogsInDb();
+    expect(blogsAtEnd.length).toBe(helper.initialBlogs.length - 1);
+
+    const titles = blogsAtEnd.map(blog => blog.title);
+    expect(titles).not.toContain(blogToDelete.title);
+  });
 });
 
-test.skip('like is zero by default if its missing from request', async () => {
-  const newBlog = {
-    title: 'No likes',
-    author: 'Not an author',
-    url: 'www.nolikes.com'
-  };
+describe('updating a blog', () => {
+  test('with valid id will increment likes of the blog by one', async () => {
+    const blogsAtStart = await helper.blogsInDb();
+    const blogToUpdate = blogsAtStart[0];
 
-  const savedBlog = await api
-    .post('/api/blogs/')
-    .send(newBlog)
-    .expect(200)
-    .expect('Content-Type', /application\/json/);
+    const updatedBlog = await api
+      .put(`/api/blogs/${blogToUpdate.id}`)
+      .send(blogToUpdate)
+      .expect(200)
+      .expect('Content-Type', /application\/json/);
 
-  expect(savedBlog.body.likes).toBe(0);
-});
-
-test('missing title and url results in 400 Bad Request', async () => {
-  const newBlog = {
-    author: 'Ram Lal'
-  };
-
-  await api
-    .post('/api/blogs/')
-    .send(newBlog)
-    .expect(400);
+    expect(updatedBlog.body.likes).toBe(blogToUpdate.likes + 1);
+  });
 });
 
 afterAll(() => {

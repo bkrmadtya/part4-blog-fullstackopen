@@ -11,19 +11,19 @@ const initialBlogs = [
     title: 'Blue Moon',
     author: 'Tony Fireman',
     url: 'www.bluemoon.com',
-    likes: 65
+    likes: 20
   },
   {
-    title: 'Blue Moon',
+    title: 'Gray Moon',
     author: 'Tony Fireman',
     url: 'www.bluemoon.com',
-    likes: 64
+    likes: 60
   },
   {
     title: 'Golden Moon',
     author: 'Tony Fireman',
     url: 'www.bluemoon.com',
-    likes: 67
+    likes: 40
   }
 ];
 
