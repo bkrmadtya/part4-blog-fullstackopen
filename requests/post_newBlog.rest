@@ -2,8 +2,8 @@ POST http://localhost:3003/api/blogs
 Content-Type: application/json
 
 {  
-    "title" : "Blue Moon",
+    "title" : "Harvesty Moon",
     "author": "Tony Fireman",
-    "url" : "www.bluemoon.com",
-    "likes": 65
+    "url" : "www.harvestmoon.com",
+    "likes": 75
 }
